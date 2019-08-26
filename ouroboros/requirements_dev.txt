@@ -1,0 +1,11 @@
+Sphinx
+bumpversion
+coverage
+flake8
+pip
+tox
+twine
+watchdog
+wheel
+
+-r requirements.txt
