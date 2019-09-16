@@ -9,7 +9,7 @@ provider:
 
 package:
  exclude:
-   - **
+   - ./**
  include:
    - ouroboros/ouroboros/**
 
