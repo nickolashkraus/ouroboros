@@ -1,5 +1,11 @@
-.PHONY: clean clean-test clean-pyc clean-build help
+.PHONY: help clean clean-build clean-pyc clean-test
+.PHONY: test unit-test coverage lint check format
 .DEFAULT_GOAL := help
+
+RED    = \033[0;31m
+YELLOW = \033[0;33m
+GREEN  = \033[0;32m
+RESET  = \033[0m
 
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
@@ -29,7 +35,7 @@ BROWSER := python -c "$$BROWSER_PYSCRIPT"
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
+clean: clean-build clean-pyc clean-test ## run clean-build, clean-pyc, and clean-test
 
 clean-build: ## remove build artifacts
 	rm -fr build/
@@ -38,7 +44,7 @@ clean-build: ## remove build artifacts
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -f {} +
 
-clean-pyc: ## remove Python file artifacts
+clean-pyc: ## remove Python artifacts
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
@@ -46,28 +52,56 @@ clean-pyc: ## remove Python file artifacts
 
 clean-test: ## remove test and coverage artifacts
 	rm -f .coverage
+	rm -f coverage.xml
+	rm -fr cover/
 	rm -fr htmlcov/
 	rm -fr .pytest_cache
 
-lint: ## check style with flake8
-	flake8 ouroboros tests
+test: unit-test coverage lint check ## run unit-test, coverage, lint, and check
 
-test: ## run tests quickly with the default Python
-	python setup.py test
+unit-test: ## run unit tests
+	@set -e; \
+	echo 'Running unit tests...' && \
+	nosetests . && exit 0 || \
+	coverage report -m --fail-under=100 >/dev/null && exit 1
 
-coverage: ## check code coverage quickly with the default Python
-	coverage run --source ouroboros setup.py test
-	coverage report -m
-	coverage html
+coverage: ## run code coverage
+	@set -e; \
+	echo 'Running coverage...' && \
+	nosetests . && exit 0 || \
+	coverage report -m >/dev/null || coverage html; \
 	$(BROWSER) htmlcov/index.html
 
-release: dist ## package and upload a release
-	twine upload dist/*
+lint: ## check style with flake8
+	@flake8 ouroboros tests; \
+	if [ $$? -eq 0 ]; then \
+	  echo '$(GREEN)Linting successful!$(RESET)'; \
+	fi;
 
-dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
-	ls -l dist
+check: ## check complexity and docstrings
+	@set -e; \
+	echo 'Checking complexity...' && \
+	failed=0 && \
+	for f in $$(find $$(pwd)/ouroboros/ -name '*.py';); do \
+		output=$$(python3 -m mccabe --min 7 "$$f") && \
+		if [ $(strip "$$output") != "" ]; then \
+			echo "$(YELLOW)$$(basename $$f) is too complex.$(RESET)"; \
+			echo "$(YELLOW)$$output$(RESET)\n"; \
+			failed=1; \
+		fi; \
+	done && \
+	if [ $$failed -eq 1 ]; then \
+	  echo '$(RED)Complexity check failed!$(RESET)' && \
+		exit 1; \
+	fi && \
+	echo 'Checking docstrings...' && \
+	pydocstyle . && \
+	echo '$(GREEN)Checks successful!$(RESET)'
 
-install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+format: ## format code and imports
+	@set -e; \
+	echo 'Formatting code...' && \
+	yapf --in-place --parallel --recursive . && \
+	echo 'Formatting imports...' && \
+	isort --recursive . && \
+	echo '$(GREEN)Formatting successful!$(RESET)'

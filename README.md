@@ -1,16 +1,19 @@
 # Ouroboros
 
-[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/NickolasHKraus/ouroboros/blob/master/LICENSE)
+[![Travis CI](https://travis-ci.org/NickolasHKraus/ouroboros.svg?branch=master)](https://travis-ci.org/NickolasHKraus/ouroboros)
+[![Codecov](https://img.shields.io/codecov/c/github/NickolasHKraus/ouroboros)](https://codecov.io/gh/NickolasHKraus/ouroboros)
+[![Releases](https://img.shields.io/github/v/release/NickolasHKraus/ouroboros?color=blue)](https://github.com/NickolasHKraus/ouroboros/releases)
+[![MIT License](https://img.shields.io/github/license/NickolasHKraus/ouroboros?color=blue)](https://github.com/NickolasHKraus/ouroboros/blob/master/LICENSE)
 
 Ouroboros (ˌyo͝orəˈbôrəs) simplifies AWS Lambda function deployments.
 
-> The ouroboros is an ancient symbol depicting a serpent or dragon eating its own tail. Originating in ancient Egyptian iconography, the ouroboros entered western tradition via Greek magical tradition and was adopted as a symbol in Gnosticism and Hermeticism and most notably in alchemy. The term derives from Ancient Greek: οὐροβόρος, from οὐρά (oura), "tail" + βορά (bora), "food", from βιβρώσκω (bibrōskō), "I eat".
+>The ouroboros is an ancient symbol depicting a serpent or dragon eating its own tail. Originating in ancient Egyptian iconography, the ouroboros entered western tradition via Greek magical tradition and was adopted as a symbol in Gnosticism and Hermeticism and most notably in alchemy. The term derives from Ancient Greek: οὐροβόρος, from οὐρά (oura), "tail" + βορά (bora), "food", from βιβρώσκω (bibrōskō), "I eat".
 
 ## Overview
 
 Ouroboros solves a common problem:
 
-> *It is impossible to deploy a Lambda function and the S3 bucket where it is located in the same CloudFormation template at the same time.*
+>*It is impossible to deploy a Lambda function and the S3 bucket where it is located in the same CloudFormation template at the same time.*
 
 ## A classic chicken and egg problem
 
@@ -69,7 +72,16 @@ aws cloudformation deploy \
 --parameter-overrides $(cat parameters.properties)
 ```
 
-3. Uncomment the deployment S3 bucket ([`S3Bucket`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-code.html#cfn-lambda-function-code-s3bucket)) in the Lambda function, comment out the `Zipfile`:
+3. Deploy the AWS Lambda function to the deployment S3 bucket:
+
+```bash
+aws s3api put-object \
+--body lambda_function.zip \
+--bucket $STACK_NAME-lambda \
+--key lambda_function.zip
+```
+
+4. Uncomment the deployment S3 bucket ([`S3Bucket`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-code.html#cfn-lambda-function-code-s3bucket)) in the Lambda function, comment out the `Zipfile`:
 
 ```bash
 LambdaFunction:
@@ -82,15 +94,6 @@ LambdaFunction:
       # ZipFile: |
       #   def handler(event, context):
       #     return
-```
-
-4. Deploy the AWS Lambda function to the deployment S3 bucket:
-
-```bash
-aws s3api put-object \
---body lambda_function.zip \
---bucket $STACK_NAME-lambda \
---key lambda_function.zip
 ```
 
 5. Redeploy the CloudFormation stack.
@@ -126,7 +129,7 @@ Serverless: Uploading artifacts...
 Serverless: Uploading service ouroboros.zip file to S3 (11.35 KB)...
 ```
 
-3. Any IAM Roles, Functions, Events and Resources are added to the AWS CloudFormation template and updates the CloudFormation stack:
+3. Any IAM Roles, Functions, Events and Resources are added to the AWS CloudFormation template and the CloudFormation stack is updated:
 
 ```bash
 Serverless: Validating template...
@@ -202,7 +205,7 @@ mkvirtualenv ouroboros
 Install requirements:
 
 ```bash
-pip install -r requirements_dev.txt
+pip install -r ouroboros/requirements_dev.txt
 ```
 
 ### Deployment

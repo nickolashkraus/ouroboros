@@ -1,18 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-"""Tests for `ouroboros` package."""
-
-import unittest
+"""Tests for the `main` module."""
 
 from ouroboros import main
 
+from .base import BaseTestCase
 
-class TestMain(unittest.TestCase):
-    """Tests for `main` module."""
 
+class MainTestCase(BaseTestCase):
     def test_handler(self):
-        """Test something."""
         expected = 'Hello, World!'
         actual = main.handler({}, None)
         self.assertEqual(expected, actual)
