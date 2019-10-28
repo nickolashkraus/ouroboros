@@ -215,3 +215,10 @@ Deploy Ouroboros:
 ```bash
 serverless deploy -v
 ```
+
+Use [bumpversion](https://pypi.org/project/bumpversion/) to increment the current version:
+
+```
+cd ouroboros
+bumpversion <major | minor | patch>
+```
