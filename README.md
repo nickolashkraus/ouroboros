@@ -3,7 +3,7 @@
 [![Travis CI](https://travis-ci.org/NickolasHKraus/ouroboros.svg?branch=master)](https://travis-ci.org/NickolasHKraus/ouroboros)
 [![Codecov](https://img.shields.io/codecov/c/github/NickolasHKraus/ouroboros)](https://codecov.io/gh/NickolasHKraus/ouroboros)
 [![Releases](https://img.shields.io/github/v/release/NickolasHKraus/ouroboros?color=blue)](https://github.com/NickolasHKraus/ouroboros/releases)
-[![MIT License](https://img.shields.io/github/license/NickolasHKraus/ouroboros?color=blue)](https://github.com/NickolasHKraus/ouroboros/blob/master/LICENSE)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/NickolasHKraus/ouroboros/blob/master/LICENSE)
 
 Ouroboros (ˌyo͝orəˈbôrəs) simplifies AWS Lambda function deployments.
 
