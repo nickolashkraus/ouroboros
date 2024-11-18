@@ -1,10 +1,5 @@
 # Ouroboros
 
-[![Travis CI](https://travis-ci.org/nickolashkraus/ouroboros.svg?branch=master)](https://travis-ci.org/nickolashkraus/ouroboros)
-[![Codecov](https://img.shields.io/codecov/c/github/nickolashkraus/ouroboros)](https://codecov.io/gh/nickolashkraus/ouroboros)
-[![Releases](https://img.shields.io/github/v/release/nickolashkraus/ouroboros?color=blue)](https://github.com/nickolashkraus/ouroboros/releases)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nickolashkraus/ouroboros/blob/master/LICENSE)
-
 Ouroboros (ˌyo͝orəˈbôrəs) simplifies AWS Lambda function deployments.
 
 >The ouroboros is an ancient symbol depicting a serpent or dragon eating its own tail. Originating in ancient Egyptian iconography, the ouroboros entered western tradition via Greek magical tradition and was adopted as a symbol in Gnosticism and Hermeticism and most notably in alchemy. The term derives from Ancient Greek: οὐροβόρος, from οὐρά (oura), "tail" + βορά (bora), "food", from βιβρώσκω (bibrōskō), "I eat".
